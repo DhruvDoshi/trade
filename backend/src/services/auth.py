@@ -16,6 +16,7 @@ class AuthService:  # Note: Changed from Auth to AuthService
     def __init__(self):
         self.settings = get_settings()
         self.timeout = 10
+        self.logger = setup_logger(__name__)
 
     def _headers(self, token=None):
         headers = {
@@ -34,6 +35,14 @@ class AuthService:  # Note: Changed from Auth to AuthService
 
     def login(self) -> Session:
         try:
+            self.logger.info("Initiating login", extra={
+                'extra_fields': {
+                    'username': self.settings.USERNAME,
+                    'client_ip': self.settings.CLIENT_PUBLIC_IP,
+                    'action': 'login_attempt'
+                }
+            })
+            
             session = requests.Session()
             totp = pyotp.TOTP(self.settings.TOTP_SECRET).now()
             
@@ -50,7 +59,23 @@ class AuthService:  # Note: Changed from Auth to AuthService
             ).json()
 
             if not response.get('status'):
+                self.logger.error("Login failed", extra={
+                    'extra_fields': {
+                        'error': response.get('message'),
+                        'status_code': response.get('status'),
+                        'username': self.settings.USERNAME,
+                        'action': 'login_failed'
+                    }
+                })
                 raise Exception(response.get('message', 'Login failed'))
+
+            self.logger.info("Login successful", extra={
+                'extra_fields': {
+                    'username': self.settings.USERNAME,
+                    'session_id': session.cookies.get('session_id'),
+                    'action': 'login_success'
+                }
+            })
 
             return Session(
                 token=response['data']['jwtToken'],
@@ -58,7 +83,14 @@ class AuthService:  # Note: Changed from Auth to AuthService
             )
 
         except Exception as e:
-            logger.error(f"Login failed: {e}")
+            self.logger.error("Login error", extra={
+                'extra_fields': {
+                    'error_type': type(e).__name__,
+                    'error_message': str(e),
+                    'username': self.settings.USERNAME,
+                    'action': 'login_error'
+                }
+            })
             raise
 
     def logout(self, session: Session):
