@@ -1,0 +1,6 @@
+2025-02-16 14:33:41,521 - backend.src.config.settings - INFO - Logging to: /workspaces/trade/logs/trading.log
+2025-02-16 14:33:41,523 - backend.src.services.auth - INFO - Logging to: /workspaces/trade/logs/trading.log
+2025-02-16 14:33:41,524 - backend.src.main - INFO - Logging to: /workspaces/trade/logs/trading.log
+2025-02-16 14:33:42,169 - backend.src.main - INFO - Login successful!
+2025-02-16 14:33:46,742 - backend.src.services.auth - INFO - Logout successful
+2025-02-16 14:33:46,742 - backend.src.main - INFO - Logged out successfully
