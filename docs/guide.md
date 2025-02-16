@@ -8,19 +8,18 @@ This application provides a Python-based interface for interacting with Angel On
 /workspaces/trade/
 ├── backend/
 │   └── src/
-│       ├── config/          # Configuration and constants
-│       │   ├── constants.py # API endpoints
-│       │   └── settings.py  # Environment settings
+│       ├── config/
+│       │   ├── api_endpoints.py  # API URLs and endpoints
+│       │   └── credentials.py    # Broker credentials
 │       ├── core/           
-│       │   └── logger.py    # Logging configuration
+│       │   └── logger.py        # JSON logging
 │       ├── services/
-│       │   └── auth.py      # Authentication service
-│       └── main.py          # Main application
-├── docs/                    # Documentation
-├── logs/                    # Application logs
-├── .env                     # Environment variables
-├── requirements.txt         # Dependencies
-└── run.py                  # Entry point
+│       │   └── angel_broker.py  # Broker operations
+│       └── main.py             # Application entry
+├── docs/                      # Documentation
+├── logs/                      # JSON logs
+├── .env                       # Credentials
+└── run.py                     # Entry point
 ```
 
 ## Setup Instructions
@@ -70,22 +69,20 @@ This application provides a Python-based interface for interacting with Angel On
 
 ## Code Components
 
-### Authentication Service (auth.py)
-The core authentication service handles:
-- Login with TOTP
-- Session management
-- Secure headers
-- Logout functionality
+### Broker Service (angel_broker.py)
+- Manages Angel One broker operations
+- Handles authentication and sessions
+- Provides broker-specific functionality
 
-### Settings Management (settings.py)
-- Environment variable loading
-- Configuration validation
-- Secure credential management
+### Credentials Management (credentials.py)
+- Secure credential handling
+- Environment configuration
+- Broker-specific settings
 
-### API Constants (constants.py)
-- API endpoint definitions
-- Header constants
-- Base URL configuration
+### API Endpoints (api_endpoints.py)
+- Angel One API endpoints
+- API configuration
+- Header definitions
 
 ### Logger (logger.py)
 - Dual logging (console and file)
@@ -96,12 +93,12 @@ The core authentication service handles:
 
 1. **Basic Login and Status Check**
    ```python
-   from backend.src.services.auth import AuthService
-   
-   auth = AuthService()
-   session = auth.login()
-   # Check status, perform operations
-   auth.logout(session)
+   from backend.src.services.angel_broker import AngelBroker
+
+   broker = AngelBroker()
+   session = broker.login()
+   # Perform operations
+   broker.logout(session)
    ```
 
 ## Common Issues and Solutions
